@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedule a Tour - Happy Kids Daycare</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .tour-form {
+      background-color: #f9f9f9;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .tour-form h2 {
+      margin-bottom: 1rem;
+      font-size: 2rem;
+      color: #333;
+    }
+    .tour-form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    .tour-form input,
+    .tour-form select,
+    .tour-form textarea {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    .tour-form textarea {
+      resize: vertical;
+    }
+    .tour-form button {
+      background-color: #f48fb1;
+      color: white;
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .tour-form button:hover {
+      background-color: #ec407a;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-container">
+      <div class="logo-container">
+        <img src="https://img.icons8.com/color/48/000000/daycare.png" alt="Happy Kids Daycare Logo" class="logo">
+        <h1 class="site-title">Happy Kids Daycare</h1>
+      </div>
+      <button id="menu-toggle" class="menu-toggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav id="main-nav">
+        <ul class="nav-links">
+          <li><a href="home.html" class="nav-link">Home</a></li>
+          <li><a href="about.html" class="nav-link">About</a></li>
+          <li><a href="programs.html" class="nav-link">Programs</a></li>
+          <li><a href="index.html" class="btn-primary">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="cta-section">
+      <div class="container">
+        <div class="card cta-card">
+          <h2>Schedule a Tour</h2>
+          <p>We’d love to show you around! Fill out the form below to schedule your visit.</p>
+
+          <form class="tour-form" action="submit-tour-request.php" method="POST">
+            <label for="full-name">Full Name</label>
+            <input type="text" id="full-name" name="full_name" required placeholder="Enter your full name">
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email address">
+
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+
+            <label for="preferred-date">Preferred Date for Tour</label>
+            <input type="date" id="preferred-date" name="preferred_date" required>
+
+            <label for="additional-info">Any Additional Information</label>
+            <textarea id="additional-info" name="additional_info" rows="4" placeholder="Let us know any special requests or questions you have."></textarea>
+
+            <button type="submit">Submit Request</button>
+          </form>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-logo">
+            <img src="https://img.icons8.com/color/48/000000/daycare.png" alt="Happy Kids Daycare Logo" class="logo-small">
+            <h2>Happy Kids Daycare</h2>
+          </div>
+          <p>Where every child's development and happiness is our priority.</p>
+        </div>
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="programs.html">Programs</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Contact</h3>
+          <address>
+            <div>123 Sunshine Avenue</div>
+            <div>Happyville, HV 12345</div>
+            <div>Phone: (123) 456-7890</div>
+            <div>Email: info@happykidsdaycare.com</div>
+          </address>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>&copy; <span id="current-year"></span> Happy Kids Daycare. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Set current year in footer
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+    // Mobile menu toggle functionality
+    const menuToggle = document.getElementById('menu-toggle');
+    const mainNav = document.getElementById('main-nav');
+    menuToggle.addEventListener('click', () => {
+      mainNav.classList.toggle('active');
+      menuToggle.classList.toggle('active');
+    });
+  </script>
+</body>
+</html>

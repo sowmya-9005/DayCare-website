@@ -1,0 +1,245 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home | Happy Kids Daycare - Nurturing Young Minds</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+<style>
+    /* Additional CSS to complement your provided styles.css */
+    
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(to right, #fce3ff, #fdeff9);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    .hero .hero-content h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--foreground);
+    }
+    .hero .hero-content p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      color: var(--muted-foreground);
+    }
+    .btn-hero {
+      background-color: var(--accent);
+      color: var(--accent-foreground);
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: all 0.3s;
+      display: inline-block;
+    }
+    .btn-hero:hover {
+      background-color: var(--primary);
+    }
+    
+    /* Marquee Section */
+    .marquee-container {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 1rem 0;
+      background-color: var(--muted);
+    }
+    .marquee-content img {
+      height: 150px;
+      margin: 0 1rem;
+      border-radius: var(--radius);
+      object-fit: cover;
+    }
+    
+    /* Features Section */
+    .features {
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: var(--foreground);
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .feature-card {
+      background: var(--background);
+      padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+    }
+    .feature-card:hover {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .feature-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--foreground);
+    }
+    
+    /* Footer tweaks (if needed) */
+    .footer-container {
+      padding: 2rem;
+      background-color: var(--muted);
+      text-align: center;
+    }
+    .footer-links a {
+      margin: 0 0.5rem;
+      color: var(--muted-foreground);
+      transition: color 0.3s;
+    }
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="logo-container">
+        <img src="https://img.icons8.com/color/48/000000/daycare.png" alt="Happy Kids Daycare Logo" class="logo">
+        <h1 class="site-title">Happy Kids Daycare</h1>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="home.html" class="active">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="programs.html">Programs</a></li>
+          <li><a href="index.html" class="btn-primary">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Welcome to Happy Kids Daycare</h1>
+      <p>Where we nurture young minds through play, discovery, and loving care in a safe, stimulating environment.</p>
+      <a href="programs.html" class="btn-hero">Explore Our Programs</a>
+    </div>
+  </section>
+ <div class="marquee-container">
+    <div class="marquee-content">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQajpgtEt3C1fSg52gmMeiDmyNJ7To86oWerQ&s" alt="Happy children playing">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCfP7804m2LV8GsUUMmL9ABE_IUgJ0oMqoG0PoITu1IUjBvLgLwGFPHi7095BJOogOOgw&usqp=CAU"alt="Children learning">
+      <img src="data:image/jpeg;base64,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" alt="Daycare activities">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQajpgtEt3C1fSg52gmMeiDmyNJ7To86oWerQ&s" alt="Outdoor play">
+	<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaCIcXaem7cyOhOlMGGetNwi1tjISjIpgvYg&s" alt="Outdoor play">
+	<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1nxxrWn3O8rYWgu6ISs3rq26xLxshJ1W88g&s" alt="Outdoor play" width="200">
+    </div>
+  </div>
+  <section class="features">
+    <h2 class="section-title">Why Choose Happy Kids?</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">👶</div>
+        <h3 class="feature-title">Infant Care</h3>
+        <p>Specialized care for our littlest ones with a 3:1 child-to-caregiver ratio.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3 class="feature-title">Creative Learning</h3>
+        <p>Arts, music, and movement activities to stimulate young minds.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🍎</div>
+        <h3 class="feature-title">Healthy Meals</h3>
+        <p>Nutritionist-approved meals and snacks included in tuition.</p>
+      </div>
+    </div>
+  </section>
+
+
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-logo">
+            <img src="https://img.icons8.com/color/48/000000/daycare.png" alt="Happy Kids Daycare Logo" class="logo-small"/>
+            <h2>Happy Kids Daycare</h2>
+          </div>
+          <p>Where every child's development and happiness is our priority.</p>
+        </div>
+
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="programs.html">Programs</a></li>
+            <li><a href="about.html">about us</a></li>
+            <li><a href="index.html">login</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Contact</h3>
+          <address>
+            123 Sunshine Avenue<br />
+            Happyville, HV 12345<br />
+            Phone: (123) 456-7890<br />
+            Email: info@happykidsdaycare.com
+          </address>
+        </div>
+      </div>
+
+      <div class="copyright">
+        <p>&copy; <span id="current-year"></span> Happy Kids Daycare. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+<!-- Chatbot -->
+<div id="chatbot" class="chatbot">
+  <button id="chatbot-toggle" class="chatbot-toggle">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+    </svg>
+  </button>
+
+  <div class="chatbot-window" id="chatbot-window">
+    <div class="chatbot-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="chatbot-avatar">HK</div>
+        Happy Kids Assistant
+      </div>
+      <button id="chatbot-close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div id="chatbot-messages" class="chatbot-messages"></div>
+
+    <div class="chatbot-input-container">
+      <input type="text" id="chatbot-input" placeholder="Type your message..." />
+      <button id="chatbot-send">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="chatscript.js"></script>
+
+
+</body>
+</html>

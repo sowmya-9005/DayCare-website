@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Add Student</title>
+</head>
+<body>
+
+<!-- Modal visible without script -->
+<div id="add-student-modal" class="modal" style="display: block;">
+  <div class="modal-content">
+    <!-- Close button with redirect -->
+    <span class="close-modal" onclick="window.location.href='admin.html';" style="cursor: pointer;">&times;</span>
+    <h2>Add New Student</h2>
+    <form id="add-student-form" method="POST" action="/add_student">
+      <div class="form-group">
+        <label for="student-name">Name</label>
+        <input type="text" id="student-name" name="name" class="form-input" required />
+      </div>
+      <div class="form-group">
+        <label for="parentname">Parent Name</label>
+        <input type="text" id="parentname" name="parentname" class="form-input" required />
+      </div>
+      <div class="form-group">
+        <label for="parentemail">Parent Email</label>
+        <input type="email" id="parentemail" name="parentemail" class="form-input" required />
+      </div>
+      <div class="form-group">
+        <label for="parentpassword">Parent Password</label>
+        <input type="password" id="parentpassword" name="parentpassword" class="form-input" required />
+      </div>
+      <div class="form-group">
+        <label for="student-fee">Monthly Fee</label>
+        <input type="number" id="student-fee" name="fee" class="form-input" required />
+      </div>
+      <div class="form-group">
+        <label for="facultyid">Faculty ID</label>
+        <input type="text" id="facultyid" name="facultyid" class="form-input" required />
+      </div>
+      <div class="form-group">
+        <label for="student-progress">Progress</label>
+        <input type="text" id="student-progress" name="progress" class="form-input" required />
+      </div>
+      <button type="submit" class="btn-primary btn-full">Add Student</button>
+    </form>
+  </div>
+</div>
+<script>
+document.getElementById('add-student-form').addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  const studentname = document.getElementById('student-name').value;
+  const parentname = document.getElementById('parentname').value;
+  const parentemail = document.getElementById('parentemail').value;
+  const parentpassword = document.getElementById('parentpassword').value;
+  const fee = document.getElementById('student-fee').value;
+  const facultyid = document.getElementById('facultyid').value;
+  const studentprogress = document.getElementById('student-progress').value;
+
+  fetch('http://localhost:5000/add_student', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      studentname: studentname,
+      parentname: parentname,
+      parentemail: parentemail,
+      parentpassword: parentpassword,
+      fee: fee,
+      facultyid: facultyid,
+      studentprogress: studentprogress
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.message === "Student and parent added successfully") {
+      alert("Student added successfully!");
+      window.location.href = 'admin.html';
+    } else {
+      alert("Failed to add student: " + (data.message || "Unknown error"));
+    }
+  })
+  .catch(error => {
+    console.error("Error:", error);
+    alert("An error occurred while adding the student.");
+  });
+});
+</script>
+
+</body>
+</html>

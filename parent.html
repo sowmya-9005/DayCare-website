@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Parent Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <div class="container">
+      <div class="dashboard-header">
+        <h1 class="page-title">Parent Dashboard</h1>
+        <div class="search-container">
+          <input type="search" id="parent-search" class="search-input" placeholder="Search notes...">
+        </div>
+        <div>
+          <button class="btn-primary" id="download-report">Download Report</button>
+          <button class="btn-primary" id="view-pie-chart">Pie Chart</button>
+          <button class="btn-primary" id="parent-logout-btn">Logout</button>
+        </div>
+      </div>
+
+      <div id="student-info" class="card">
+        <h3 class="section-title">Student Information</h3>
+        <div class="summary-item"><strong>Name:</strong> <span id="student-name"></span></div>
+        <div class="summary-item"><strong>Parent:</strong> <span id="parent-name"></span></div>
+        <div class="summary-item"><strong>Email:</strong> <span id="parent-email"></span></div>
+      </div>
+
+      <div id="progress-section" class="card">
+        <h3 class="section-title">Progress Notes</h3>
+        <div id="progress-notes-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const parentId = localStorage.getItem("parentid");
+
+      if (!parentId) {
+        alert("Parent ID missing. Please login.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      fetch(`http://localhost:5000/parent_details/${parentId}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("student-name").textContent = data.parent.studentname;
+          document.getElementById("parent-name").textContent = data.parent.parentname;
+          document.getElementById("parent-email").textContent = data.parent.parentemail;
+
+          const container = document.getElementById("progress-notes-container");
+          container.innerHTML = "";
+
+          data.progress_notes.forEach(note => {
+            const noteEl = document.createElement("div");
+            noteEl.className = "progress-note card";
+            noteEl.innerHTML = `
+              <strong>Date:</strong> ${note.date}<br>
+              <strong>Type:</strong> ${note.type}<br>
+              <p>${note.note}</p>
+            `;
+            container.appendChild(noteEl);
+          });
+        });
+
+      document.getElementById("download-report").onclick = () => {
+        window.open(`http://localhost:5000/download_report/${parentId}`, "_blank");
+      };
+
+      document.getElementById("view-pie-chart").onclick = () => {
+        window.location.href = `piechart.html?parentid=${parentId}`;
+      };
+
+      document.getElementById("parent-logout-btn").onclick = () => {
+        localStorage.removeItem("parentid");
+        window.location.href = "index.html";
+      };
+    });
+  </script>
+  <!-- Chatbot -->
+<div id="chatbot" class="chatbot">
+  <button id="chatbot-toggle" class="chatbot-toggle">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+    </svg>
+  </button>
+
+  <div class="chatbot-window" id="chatbot-window">
+    <div class="chatbot-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="chatbot-avatar">HK</div>
+        Happy Kids Assistant
+      </div>
+      <button id="chatbot-close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div id="chatbot-messages" class="chatbot-messages"></div>
+
+    <div class="chatbot-input-container">
+      <input type="text" id="chatbot-input" placeholder="Type your message..." />
+      <button id="chatbot-send">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="chatscript.js"></script>
+
+
+</body>
+</html>

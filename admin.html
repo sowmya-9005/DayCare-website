@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- Admin Dashboard Container -->
+<div id="admin-dashboard" class="dashboard-container">
+  <div class="container">
+
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <h1>Admin Dashboard</h1>
+<div class="search-container">
+  <form id="search-form">
+    <input type="search" id="admin-search" class="search-input" placeholder="Search parents or faculty..." />
+    <button type="submit" style="display: none;">Search</button>
+  </form>
+</div>
+
+
+      <button class="logout-btn btn-outline" id="logout-btn" onclick="window.location.href='index.html';">Logout</button>
+    </div>
+
+    <!-- Admin Action Buttons -->
+    <div class="admin-actions">
+      <a href="addstudent.html" class="btn-primary">Add Student</a>
+      <a href="addfacult.html" class="btn-secondary">Add Faculty</a>
+    </div>
+
+    <!-- Parent Table -->
+    <div class="table-container">
+      <h2>Parents</h2>
+      <table class="table-styled">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Student Name</th>
+            <th>Student Progress</th>
+            <th>Parent Name</th>
+            <th>Email</th>
+            <th>Faculty ID</th>
+        
+          </tr>
+        </thead>
+        <tbody id="parent-table-body">
+          <td><a href="edit.html?id=1">Edit</a></td>
+        <td><a href="delete.html?id=1">Delete</a></td>
+          <!-- Parent rows will be inserted here dynamically -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Faculty Table -->
+    <div class="table-container">
+      <h2>Faculty</h2>
+      <table class="table-styled">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            
+            
+          </tr>
+        </thead>
+        <tbody id="faculty-table-body">
+         <td><a href="editfaculity.html?id=101">Edit</a></td>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  
+  document.getElementById('search-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const query = document.getElementById('admin-search').value.trim();
+    if (query) {
+      window.location.href = `/search?query=${encodeURIComponent(query)}`;
+    }
+  });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const parentTableBody = document.getElementById('parent-table-body');
+  const facultyTableBody = document.getElementById('faculty-table-body');
+  const searchInput = document.getElementById('admin-search');
+
+  // Fetch and display parents
+  fetch('http://localhost:5000/viewallparents')
+    .then(res => res.json())
+    .then(data => {
+      data.forEach(parent => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${parent.parentid || ''}</td>
+          <td>${parent.studentname || ''}</td>
+          <td>${parent.studentprogress || ''}</td>
+          <td>${parent.parentname || ''}</td>
+          <td>${parent.parentemail || ''}</td>
+          <td>${parent.facultyid || ''}</td>
+        `;
+        parentTableBody.appendChild(row);
+      });
+    })
+    .catch(err => {
+      console.error('Error fetching parents:', err);
+    });
+
+  // Fetch and display faculty
+  fetch('http://localhost:5000/viewallfaculties')
+    .then(res => res.json())
+    .then(data => {
+      data.forEach(faculty => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${faculty.facultyid || ''}</td>
+          <td>${faculty.facultyname || ''}</td>
+          <td>${faculty.facultyemail || ''}</td>
+        `;
+        facultyTableBody.appendChild(row);
+      });
+    })
+    .catch(err => {
+      console.error('Error fetching faculty:', err);
+    });
+
+  // Filter search
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.toLowerCase();
+
+    document.querySelectorAll('#parent-table-body tr').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(query) ? '' : 'none';
+    });
+
+    document.querySelectorAll('#faculty-table-body tr').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(query) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+  <!-- ✅ Chatbot -->
+  <div id="chatbot" class="chatbot">
+    <button id="chatbot-toggle" class="chatbot-toggle">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+      </svg>
+    </button>
+
+    <div class="chatbot-window" id="chatbot-window">
+      <div class="chatbot-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div class="chatbot-avatar">HK</div>
+          Happy Kids Assistant
+        </div>
+        <button id="chatbot-close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div id="chatbot-messages" class="chatbot-messages"></div>
+
+      <div class="chatbot-input-container">
+        <input type="text" id="chatbot-input" placeholder="Type your message..." />
+        <button id="chatbot-send">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+<script src="chatscript.js"></script>
+</body>
+</html>

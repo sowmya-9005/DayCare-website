@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Faculty Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="faculty-dashboard" class="dashboard-container">
+    <div class="container">
+      <div class="dashboard-header">
+        <h1>Faculty Dashboard</h1>
+       <div class="search-container">
+  <form id="search-form">
+    <input type="search" id="admin-search" class="search-input" placeholder="Search parents or faculty..." />
+    <button type="submit" style="display: none;">Search</button>
+  </form>
+</div>
+
+        <button class="logout-btn btn-outline" id="logout-btn">Logout</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="students">My Students</button>
+        <button class="tab-btn" data-tab="progress">Progress Notes</button>
+        <button class="tab-btn" data-tab="reports">Reports</button>
+      </div>
+
+      <!-- Students Tab -->
+      <div id="students-tab" class="tab-content active">
+        <div class="table-container">
+          <table class="table-styled">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Student Name</th>
+                <th>Progress</th>
+                <th>Parent Name</th>
+                <th>Parent Email</th>
+              </tr>
+            </thead>
+            <tbody id="faculty-student-table">
+              <!-- Students will load here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Progress Notes Tab -->
+      <div id="progress-tab" class="tab-content">
+        <button class="btn-primary mb-3" id="open-add-note-modal">Add Note</button>
+        <div id="student-progress-cards"></div>
+      </div>
+
+      <!-- Reports Tab -->
+      <div id="reports-tab" class="tab-content">
+        <div class="grid-2">
+          <div class="card">
+            <h3>My Class Summary</h3>
+            <div class="summary-item"><span>Total Students:</span><span id="total-students-count">0</span></div>
+            <div class="summary-item"><span>Notes This Week:</span><span id="notes-this-week">0</span></div>
+            <div class="summary-item"><span>Achievements:</span><span id="achievements-count">0</span></div>
+          </div>
+          <div class="card">
+            <h3>Account Settings</h3>
+
+            <button class="btn-accent btn-full" onclick="window.location.href='editfacu.html'">Update Profile</button>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Note Modal -->
+      <div id="add-note-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <span class="close-modal" id="close-note-modal">&times;</span>
+          <h2>Add Progress Note</h2>
+          <form id="add-note-form">
+            <div class="form-group">
+              <label for="note-student">Student</label>
+              <select id="note-student" name="student_id" class="form-input" required></select>
+            </div>
+            <div class="form-group">
+              <label for="note-date">Date</label>
+              <input type="date" id="note-date" name="date" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label for="note-type">Type</label>
+              <select id="note-type" name="type" class="form-input" required>
+                <option value="daily">Daily Progress</option>
+                <option value="achievement">Achievement</option>
+                <option value="concern">Concern</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="note-content">Note</label>
+              <textarea id="note-content" name="note" class="form-textarea" required></textarea>
+            </div>
+            <button type="submit" class="btn-primary">Add Note</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const facultyId = localStorage.getItem("facultyid");
+
+  if (!facultyId) {
+    alert("No faculty ID found. Please login again.");
+    window.location.href = "index.html";
+  }
+
+
+  // Tab switching
+  document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.getElementById(btn.dataset.tab + "-tab").classList.add("active");
+      btn.classList.add("active");
+
+      // Load reports when Reports tab is clicked
+      if (btn.dataset.tab === "reports") {
+        loadReports();
+      }
+    });
+  });
+
+  // Logout
+  document.getElementById("logout-btn").onclick = () => {
+    localStorage.clear();
+    window.location.href = "index.html";
+  };
+// Live search for My Students table
+document.getElementById('admin-search').addEventListener('input', () => {
+  const query = document.getElementById('admin-search').value.toLowerCase();
+  document.querySelectorAll('#faculty-student-table tr').forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(query) ? '' : 'none';
+  });
+});
+  // Load students
+  async function loadStudents() {
+    try {
+      const res = await fetch("http://localhost:5000/viewallparents");
+      const data = await res.json();
+
+      myStudents = data.filter(p => String(p.facultyid) === String(facultyId));
+
+      const table = document.getElementById("faculty-student-table");
+      const dropdown = document.getElementById("note-student");
+      table.innerHTML = "";
+      dropdown.innerHTML = "";
+
+      if (myStudents.length === 0) {
+        table.innerHTML = "<tr><td colspan='6'>No students found for your faculty ID.</td></tr>";
+        document.getElementById("total-students-count").textContent = 0;
+        return;
+      }
+
+      myStudents.forEach(parent => {
+        table.innerHTML += `
+          <tr>
+            <td>${parent.parentid}</td>
+            <td>${parent.studentname}</td>
+            <td>${parent.studentprogress}</td>
+            <td>${parent.parentname}</td>
+            <td>${parent.parentemail}</td>
+          </tr>
+        `;
+        dropdown.innerHTML += `<option value="${parent.parentid}">${parent.studentname}</option>`;
+      });
+
+      document.getElementById("total-students-count").textContent = myStudents.length;
+    } catch (error) {
+      console.error("Error loading students:", error);
+      alert("Failed to load students. Check your connection or server.");
+    }
+  }
+
+  // Modal control
+  document.getElementById("open-add-note-modal").onclick = () => {
+    document.getElementById("add-note-modal").style.display = "block";
+  };
+  document.getElementById("close-note-modal").onclick = () => {
+    document.getElementById("add-note-modal").style.display = "none";
+  };
+
+  // Submit note
+  document.getElementById("add-note-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const payload = {
+      student_id: document.getElementById("note-student").value,
+      date: document.getElementById("note-date").value,
+      type: document.getElementById("note-type").value,
+      note: document.getElementById("note-content").value
+    };
+    try {
+      const res = await fetch("http://localhost:5000/add_note", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const result = await res.json();
+      alert(result.message || result.error);
+      document.getElementById("add-note-modal").style.display = "none";
+    } catch (err) {
+      console.error("Failed to submit note:", err);
+      alert("Error submitting note.");
+    }
+  });
+
+  // Load reports
+  async function loadReports() {
+    try {
+      const notesRes = await fetch("http://localhost:5000/get_notes");
+      const allNotes = await notesRes.json();
+      console.log("all notes",allNotes)
+
+      const studentIds = myStudents.map(s => String(s.parentid));
+      console.log(studentIds)
+      console.log("stuid",allNotes.student_id)
+     const relevantNotes = allNotes.filter(n => studentIds.includes(String(n.student_id)));
+
+      console.log(relevantNotes)
+      const achievements = relevantNotes.filter(note => note.type === "achievement");
+      console.log("Achievements:", achievements);
+      document.getElementById("notes-this-week").textContent = relevantNotes.length;
+      document.getElementById("achievements-count").textContent = achievements.length;
+    } catch (error) {
+      console.error("Failed to load reports:", error);
+      alert("Unable to load reports data.");
+    }
+  }
+
+  // Initial load
+  window.onload = async function () {
+    await loadStudents();
+    await loadReports(); // preload reports on page load
+  };
+}); // <-- Add this closing brace for DOMContentLoaded
+</script>
+
+<!-- Chatbot -->
+<div id="chatbot" class="chatbot">
+  <button id="chatbot-toggle" class="chatbot-toggle">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+    </svg>
+  </button>
+
+  <div class="chatbot-window" id="chatbot-window">
+    <div class="chatbot-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="chatbot-avatar">HK</div>
+        Happy Kids Assistant
+      </div>
+      <button id="chatbot-close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div id="chatbot-messages" class="chatbot-messages"></div>
+
+    <div class="chatbot-input-container">
+      <input type="text" id="chatbot-input" placeholder="Type your message..." />
+      <button id="chatbot-send">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="chatscript.js"></script>
+
+
+
+
+</body>
+</html>

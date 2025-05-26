@@ -1,0 +1,234 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Kids Daycare - Management System</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+</head>
+
+<body>
+  <header>
+    <div class="container header-container">
+      <div class="logo-container">
+        <img src="https://img.icons8.com/color/48/000000/daycare.png" alt="Happy Kids Daycare Logo" class="logo"/>
+        <h1 class="site-title">Happy Kids Daycare</h1>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="home.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="programs.html">Programs</a></li>
+          <li><a href="index.html" class="btn-primary">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="role-selection">
+        <h1>Welcome to</h1>
+        <h2 class="gradient-text">Happy Kids Daycare Management System</h2>
+
+        <div class="role-cards">
+          <div class="card role-card" data-role="admin">
+            <div class="role-icon">👨‍💼</div>
+            <h3>Administrator</h3>
+            <p>Manage students, faculty, and system settings</p>
+          </div>
+
+          <div class="card role-card" data-role="faculty">
+            <div class="role-icon">👩‍🏫</div>
+            <h3>Faculty</h3>
+            <p>Track student progress, update achievements</p>
+          </div>
+
+          <div class="card role-card" data-role="parent">
+            <div class="role-icon">👨‍👩‍👧</div>
+            <h3>Parent</h3>
+            <p>View progress, pay fees, contact faculty</p>
+          </div>
+        </div>
+
+        <div id="login-form-container" class="card login-card" style="display: none;">
+          <h3 id="login-title">Login as <span id="selected-role">Role</span></h3>
+
+          <form id="login-form">
+            <div class="form-group">
+              <label for="username">Username / Email</label>
+              <input type="text" id="username" name="username" class="form-input" required />
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" class="form-input" required />
+            </div>
+
+            <div class="form-row">
+              <div class="checkbox-group">
+                <input type="checkbox" id="remember" name="remember"/>
+                <label for="remember">Remember me</label>
+              </div>
+              <a href="#" class="forgot-password">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn-primary btn-full">Login</button>
+          </form>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-logo">
+            <img src="https://img.icons8.com/color/48/000000/daycare.png" alt="Happy Kids Daycare Logo" class="logo-small"/>
+            <h2>Happy Kids Daycare</h2>
+          </div>
+          <p>Where every child's development and happiness is our priority.</p>
+        </div>
+
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="programs.html">Programs</a></li>
+            <li><a href="about.html">about us</a></li>
+            <li><a href="index.html">login</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Contact</h3>
+          <address>
+            123 Sunshine Avenue<br />
+            Happyville, HV 12345<br />
+            Phone: (123) 456-7890<br />
+            Email: info@happykidsdaycare.com
+          </address>
+        </div>
+      </div>
+
+      <div class="copyright">
+        <p>&copy; <span id="current-year"></span> Happy Kids Daycare. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      let selectedRole = null;
+
+      document.querySelectorAll('.role-card').forEach(card => {
+        card.addEventListener('click', () => {
+          selectedRole = card.dataset.role;
+          document.getElementById('login-form-container').style.display = 'block';
+          document.getElementById('selected-role').textContent = selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1);
+        });
+      });
+
+      const loginForm = document.getElementById('login-form');
+
+      loginForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const email = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        let url = '';
+        let body = {};
+
+        if (selectedRole === 'admin') {
+          url = 'http://localhost:5000/adminlogin';
+          body = { adminemail: email, adminpass: password };
+        } else if (selectedRole === 'faculty') {
+          url = 'http://localhost:5000/facultylogin';
+          body = { facultyemail: email, facultypass: password };
+        } else if (selectedRole === 'parent') {
+          url = 'http://localhost:5000/parentlogin';
+          body = { parentemail: email, parentpassword: password };
+        } else {
+          alert('Please select a role before logging in.');
+          return;
+        }
+
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+          });
+
+          const data = await response.json();
+
+         if (response.ok) {
+  alert('Login successful!');
+
+  if (selectedRole === 'admin') {
+    window.location.href = 'admin.html';
+  } else if (selectedRole === 'faculty') {
+    localStorage.setItem("facultyid", data.facultyid); // ✅ Store facultyid
+    window.location.href = 'faculty.html';
+  } else if (selectedRole === 'parent') {
+    localStorage.setItem("parentid", data.parentid); // ✅ Store parentid
+    window.location.href = 'parent.html';
+  }
+} else {
+            alert(data.message || 'Login failed: Wrong credentials');
+            
+          }
+        } catch (err) {
+          console.error('Error:', err);
+          alert('An error occurred during login');
+        }
+      });
+
+      // Update footer year
+      document.getElementById("current-year").textContent = new Date().getFullYear();
+    });
+  </script>
+  <!-- Chatbot -->
+<div id="chatbot" class="chatbot">
+  <button id="chatbot-toggle" class="chatbot-toggle">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+    </svg>
+  </button>
+
+  <div class="chatbot-window" id="chatbot-window">
+    <div class="chatbot-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="chatbot-avatar">HK</div>
+        Happy Kids Assistant
+      </div>
+      <button id="chatbot-close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div id="chatbot-messages" class="chatbot-messages"></div>
+
+    <div class="chatbot-input-container">
+      <input type="text" id="chatbot-input" placeholder="Type your message..." />
+      <button id="chatbot-send">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="chatscript.js"></script>
+
+
+</body>
+</html>

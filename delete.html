@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Delete Parent</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .form-wrapper {
+      max-width: 500px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    h2 {
+      text-align: center;
+      color: #c0392b;
+    }
+
+    label {
+      font-weight: 500;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .btn-danger {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-danger:hover {
+      background-color: #c0392b;
+    }
+
+    .btn-secondary {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background-color: #2980b9;
+    }
+
+    #confirmText {
+      margin-top: 20px;
+      font-weight: 500;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-wrapper">
+    <h2>Delete Parent</h2>
+
+    <label for="parentIdInput">Enter Parent ID:</label>
+    <input type="text" id="parentIdInput">
+    <button class="btn-secondary" onclick="loadParentForDeletion()">Load Data</button>
+
+    <p id="confirmText"></p>
+    <button id="confirmDelete" class="btn-danger" style="display:none;">Yes, Delete</button>
+  </div>
+
+  <script>
+    function loadParentForDeletion() {
+      const parentId = document.getElementById("parentIdInput").value.trim();
+      if (!parentId) {
+        alert("Please enter a Parent ID");
+        return;
+      }
+
+      fetch("http://localhost:5000/viewallparents")
+        .then(res => res.json())
+        .then(data => {
+          const parent = data.find(p => p.parentid == parentId);
+          if (parent) {
+            document.getElementById("confirmText").textContent =
+              `Are you sure you want to delete parent "${parent.parentname}" for student "${parent.studentname}"?`;
+            document.getElementById("confirmDelete").style.display = "inline-block";
+          } else {
+            alert("Parent ID not found");
+          }
+        });
+    }
+
+    document.getElementById("confirmDelete").addEventListener("click", function() {
+      const parentId = document.getElementById("parentIdInput").value.trim();
+      fetch(`http://localhost:5000/delete_parent/${parentId}`, {
+        method: "POST"
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        document.getElementById("confirmDelete").style.display = "none";
+        document.getElementById("confirmText").textContent = "";
+        document.getElementById("parentIdInput").value = "";
+      });
+    });
+  </script>
+</body>
+</html>

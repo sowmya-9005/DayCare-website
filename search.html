@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search Results</title>
+</head>
+<body>
+  <h2>Search Results for "{{ query }}"</h2>
+
+  <h3>Matching Parents</h3>
+  <ul>
+    {% for parent in parents %}
+      <li>{{ parent.studentname }} - {{ parent.parentname }} ({{ parent.parentemail }})</li>
+    {% else %}
+      <li>No matching parents found.</li>
+    {% endfor %}
+  </ul>
+
+  <h3>Matching Faculties</h3>
+  <ul>
+    {% for faculty in faculties %}
+      <li>{{ faculty.facultyname }} - {{ faculty.facultyemail }}</li>
+    {% else %}
+      <li>No matching faculty found.</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
