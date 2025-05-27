@@ -26,9 +26,8 @@ mysql = MySQL(app)
 bcrypt = Bcrypt(app)
 app.config['JWT_SECRET_KEY'] = 'your_super_secret_key'
 jwt = JWTManager(app)
-# -------------------------
+
 # Admin Login
-# -------------------------
 @app.route("/adminlogin", methods=['POST'])
 def admin_login():
     data = request.json
@@ -51,9 +50,8 @@ def admin_login():
             "adminemail": adminemail_db
         })
     return jsonify({"message": "Login failed: Incorrect password"}), 401
-# -------------------------
+
 # Faculty Login
-# -------------------------
 @app.route("/facultylogin", methods=['POST'])
 def faculty_login():
     data = request.json
@@ -76,9 +74,8 @@ def faculty_login():
     "facultyid": facultyid  # ✅ Add this line
 })
     return jsonify({"message": "Login failed"}), 401
-# -------------------------
+
 # Parent Login
-# -------------------------
 @app.route("/parentlogin", methods=['POST'])
 def parent_login():
     data = request.json
@@ -102,9 +99,8 @@ def parent_login():
             "parentid": parentid  # <-- Added
         })
     return jsonify({"message": "Login failed"}), 401
-# -------------------------
+
 # Admin Register
-# -------------------------
 @app.route("/adminregister", methods=['POST'])
 def admin_register():
     data = request.json
@@ -122,9 +118,8 @@ def admin_register():
     cur.execute("INSERT INTO admin (adminname, adminemail, adminpass) VALUES (%s, %s, %s)", (uname, uemail, hashed_password))
     mysql.connection.commit()
     return jsonify({"message": "Registration successful"}), 201
-# -------------------------
+    
 # Add Faculty
-# -------------------------
 @app.route("/add_faculty", methods=["POST"])
 def add_faculty():
     data = request.json
@@ -139,9 +134,8 @@ def add_faculty():
                 (facultyname, facultyemail, hashed_password))
     mysql.connection.commit()
     return jsonify({"message": "Faculty added successfully"}), 201
-# -------------------------
+    
 # Add Student & Parent
-# -------------------------
 @app.route("/add_student", methods=["POST"])
 def add_student():
     data = request.json
@@ -175,7 +169,7 @@ def view_all_faculties():
     col_names = [desc[0] for desc in cur.description]
     results = [dict(zip(col_names, row)) for row in rows]
     return jsonify(results), 200
-# -------------------------
+    
 @app.route("/viewallparents", methods=['GET'])
 def view_all_parents():
     cur = mysql.connection.cursor()
@@ -184,9 +178,7 @@ def view_all_parents():
     col_names = [desc[0] for desc in cur.description]
     results = [dict(zip(col_names, row)) for row in rows]
     return jsonify(results), 200
-# -------------------------
-# Run Server
-# -------------------------
+    
 @app.route('/edit_faculty/<int:faculty_id>', methods=['POST'])
 def edit_faculty(faculty_id):
     data = request.get_json()
